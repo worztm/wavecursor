@@ -1,0 +1,15 @@
+{
+	"fixed": {
+		"file_version": "0.0.1"
+	},
+	"info": {
+		"0000": {
+			"ProductVersion": "0.0.1",
+			"CompanyName": "WaveCursor",
+			"FileDescription": "Control your computer cursor with hand gestures using your camera",
+			"LegalCopyright": "(c) 2026, WaveCursor",
+			"ProductName": "WaveCursor",
+			"Comments": "Some Product Comments"
+		}
+	}
+}

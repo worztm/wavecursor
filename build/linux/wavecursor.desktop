@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=WaveCursor
+Comment=Control your computer cursor with hand gestures using your camera
+# The Exec line includes %u to pass the URL to the application
+Exec=/usr/local/bin/wavecursor %u
+Terminal=false
+Type=Application
+Icon=wavecursor
+Categories=Utility;
+StartupWMClass=wavecursor
+
+ 
