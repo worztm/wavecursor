@@ -1,3 +1,2 @@
-# Wails-generated scaffolding (not project source) — excluded from GitHub language stats
-build/android/** linguist-generated
-build/ios/**   linguist-generated
+# Wails-generated scaffolding (platform build configs, templates) — excluded from GitHub language stats
+build/** linguist-generated
