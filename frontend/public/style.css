@@ -493,6 +493,8 @@ body::after {
   min-height: 0;
   overflow-y: auto;
   padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
 }
 
 .panel::-webkit-scrollbar {
@@ -736,7 +738,11 @@ body::after {
   border: 2px solid var(--accent-hi);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 0 10px -2px rgba(56, 211, 185, 0.6);
   cursor: grab;
-  transition: transform var(--dur) var(--ease);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+.slider input[type="range"]:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--surface-1), 0 0 0 5px var(--accent), 0 0 12px -2px rgba(56, 211, 185, 0.7);
 }
 
 .slider input[type="range"]::-webkit-slider-thumb:hover {
@@ -780,9 +786,18 @@ body::after {
   border-radius: 6px;
 }
 
+.toggle-row:hover .toggle-label {
+  color: var(--text-1);
+}
+
+.toggle-row:active {
+  transform: scale(0.995);
+}
+
 .toggle-label {
   font-size: 13px;
   color: var(--text-1);
+  transition: color var(--dur) var(--ease);
 }
 
 /* gesture legend */
@@ -872,6 +887,16 @@ body::after {
 
 .app.compact .camera-wrap {
   border-radius: var(--r-md);
+}
+
+.app.compact .chips {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.app.compact .chips::-webkit-scrollbar {
+  display: none;
 }
 
 .app.compact .status-pill {
