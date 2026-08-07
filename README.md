@@ -31,6 +31,14 @@ Wave at your camera instead of reaching for the mouse — click, double-click, d
 
 💡 Press Space to toggle tracking on or off at any time.
 
+🖥️ Interface
+
+- **Viewfinder HUD** — the camera view shows a live mode badge (MOVE / CLICK / DRAG / SCROLL …) in the bottom-left corner, a click flash rings the frame whenever a click fires, and a soft glow on the viewfinder border confirms the tracker is live.
+- **Status chips** — hand detection, current gesture mode, detection FPS and cursor coordinates, always visible under the camera (even in compact mode).
+- **Control panel** — master toggle, tracking mode (absolute / relative), sensitivity, response, dead zone, scroll speed, window options and the gesture legend.
+- **Compact mode** — shrinks the window to a small floating camera panel that keeps tracking in the background; the panel re-centers itself on screen.
+- **Retry** — if the camera fails to start (unplugged webcam, blocked access), an inline error explains why and offers a Try again button.
+
 🖱️ Cursor mapping
 
 Two modes, switchable from the panel:
