@@ -431,8 +431,8 @@ export default function App() {
           </span>
           <button
             className={`icon-btn ${settings.compact ? 'active' : ''}`}
-            title="Compact mode"
-            aria-label="Toggle compact mode"
+            title={settings.compact ? 'Exit compact mode' : 'Compact mode'}
+            aria-label={settings.compact ? 'Exit compact mode' : 'Compact mode'}
             aria-pressed={settings.compact}
             onClick={() => updateSettings({ compact: !settings.compact })}
           >
