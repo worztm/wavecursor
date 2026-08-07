@@ -100,6 +100,11 @@ export default function App() {
     if (patch.compact !== undefined) {
       cursor.setWindowSize(next.compact ? 560 : 1180, next.compact ? 640 : 780);
     }
+    // The relative-mode position tracker must not survive a reset — a stale
+    // value would make the cursor jump on resume.
+    if (patch.enabled === false || patch.mode !== undefined) {
+      cursorRef.current = { x: NaN, y: NaN };
+    }
     setSettings(next);
   };
 
@@ -223,7 +228,11 @@ export default function App() {
       // below only runs for absolute mode). Drags are absolute in both modes.
       if (settingsRef.current.mode === 'relative') {
         const c = cursorRef.current;
-        if (Math.abs(out.targetX - c.x) > 1.5 || Math.abs(out.targetY - c.y) > 1.5) {
+        if (
+          !Number.isFinite(c.x) ||
+          Math.abs(out.targetX - c.x) > 1.5 ||
+          Math.abs(out.targetY - c.y) > 1.5
+        ) {
           c.x = out.targetX;
           c.y = out.targetY;
           cursor.moveCursor(out.targetX, out.targetY);
