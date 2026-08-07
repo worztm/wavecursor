@@ -158,7 +158,10 @@ export default function App() {
       const s = settingsRef.current;
 
       if (!s.enabled) {
-        if (engine.isDragging) engine.reset();
+        // Never leave the mouse button held when tracking is paused
+        // mid-drag — release it before the engine forgets the drag.
+        if (engine.isDragging) cursor.leftUp();
+        engine.reset();
         const lm = r.landmarks ?? null;
         drawFrame(lm, 0);
         setHandDetected(!!lm);
@@ -269,6 +272,8 @@ export default function App() {
     init();
     return () => {
       cancelled = true;
+      // Release any held drag before tearing the engine down.
+      if (engineRef.current?.isDragging) cursor.leftUp();
       cameraRef.current?.stop();
       cameraRef.current = null;
       engineRef.current?.reset();
