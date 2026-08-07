@@ -181,6 +181,9 @@ export class GestureEngine {
       this.leftHeld = false;
     }
     this.state = 'idle';
+    this.stateSince = 0;
+    this.cooldownUntil = 0;
+    this.lastClickAt = 0;
     this.lastWrist = null;
     this.scrollAccum = 0;
     this.initialized = false;
