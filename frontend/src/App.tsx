@@ -62,6 +62,7 @@ export default function App() {
   const [screenSize, setScreenSize] = useState('');
   const [flashKey, setFlashKey] = useState(0);
   const [statusMsg, setStatusMsg] = useState('Starting…');
+  const [restartKey, setRestartKey] = useState(0);
 
   const fpsRef = useRef({ frames: 0, last: performance.now() });
   const cursorRef = useRef({ x: 0, y: 0 });
@@ -216,6 +217,18 @@ export default function App() {
   );
 
   // ── lifecycle ───────────────────────────────────────────────────────────
+  const retry = useCallback(() => {
+    // Tear down the failed instance and let the init effect re-run.
+    cameraRef.current?.stop();
+    cameraRef.current = null;
+    engineRef.current?.reset();
+    engineRef.current = null;
+    setStatus('idle');
+    setError('');
+    setStatusMsg('Restarting…');
+    setRestartKey((k) => k + 1);
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
 
@@ -261,7 +274,7 @@ export default function App() {
       engineRef.current?.reset();
       engineRef.current = null;
     };
-  }, [handleFrame]);
+  }, [handleFrame, restartKey]);
 
   // ── 60fps cursor interpolator ────────────────────────────────────────────
   // Hand detection runs at whatever rate MediaPipe can manage; this loop runs
@@ -415,6 +428,9 @@ export default function App() {
                 <p>⚠️ Could not start the camera</p>
                 <p className="err-detail">{error}</p>
                 <p className="err-detail">Make sure a webcam is connected and access is allowed.</p>
+                <button className="retry-btn" onClick={retry}>
+                  Try again
+                </button>
               </div>
             )}
           </div>

@@ -377,6 +377,31 @@ body::after {
   color: var(--text-3);
 }
 
+.retry-btn {
+  margin-top: 4px;
+  padding: 9px 22px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-hi);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-line);
+  border-radius: 10px;
+  box-shadow: var(--shadow-1);
+  transition: all var(--dur) var(--ease);
+}
+
+.retry-btn:hover {
+  background: rgba(56, 211, 185, 0.18);
+  box-shadow: var(--glow);
+}
+
+.retry-btn:active {
+  transform: scale(0.97);
+}
+
 .spinner {
   width: 32px;
   height: 32px;
