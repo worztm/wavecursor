@@ -94,7 +94,8 @@ export function SetAlwaysOnTop(on: boolean): $CancellablePromise<void> {
 }
 
 /**
- * SetWindowSize resizes the control window (used by the compact mode toggle).
+ * SetWindowSize resizes the control window (used by the compact mode toggle)
+ * and re-centers it so the panel stays in the middle of the screen.
  */
 export function SetWindowSize(width: number, height: number): $CancellablePromise<void> {
     return $Call.ByID(3347564492, width, height);
