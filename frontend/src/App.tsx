@@ -354,10 +354,25 @@ export default function App() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
+  // If the window loses focus mid-drag (user switches apps, the always-on-top
+  // panel gets covered), release the mouse button — otherwise the button
+  // would stay held with no hand to release it.
+  useEffect(() => {
+    const onBlur = () => {
+      const engine = engineRef.current;
+      if (engine?.isDragging) {
+        cursor.leftUp();
+        engine.reset();
+      }
+    };
+    window.addEventListener('blur', onBlur);
+    return () => window.removeEventListener('blur', onBlur);
+  }, []);
+
   // Space toggles tracking (unless a slider has focus).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.code !== 'Space') return;
+      if (e.code !== 'Space' || e.repeat) return;
       const tag = (e.target as HTMLElement)?.tagName;
       if (tag === 'INPUT' || tag === 'BUTTON' || tag === 'TEXTAREA') return;
       e.preventDefault();
