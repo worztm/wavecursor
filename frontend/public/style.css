@@ -268,6 +268,14 @@ body::after {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+/* Subtle accent glow while the tracker is live. */
+.camera-wrap.live {
+  border-color: rgba(56, 211, 185, 0.28);
+  box-shadow: var(--shadow-2), inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 0 34px -14px rgba(56, 211, 185, 0.35);
 }
 
 /* Viewfinder corner brackets. */

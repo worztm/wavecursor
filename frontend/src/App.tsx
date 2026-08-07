@@ -443,7 +443,7 @@ export default function App() {
 
       <main className="layout">
         <section className="camera-card">
-          <div className="camera-wrap">
+          <div className={`camera-wrap ${status === 'running' ? 'live' : ''}`}>
             <video ref={videoRef} className="camera-video" playsInline muted />
             <canvas ref={canvasRef} width={640} height={480} className="camera-canvas" />
             <div key={flashKey} className={`click-flash ${flashKey > 0 ? 'flash' : ''}`} />
