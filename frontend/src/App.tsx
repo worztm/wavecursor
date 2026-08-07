@@ -73,16 +73,17 @@ export default function App() {
       if (engineRef.current?.isDragging) cursor.leftUp();
       engineRef.current?.reset();
     }
-    setSettings((prev) => {
-      const next = { ...prev, ...patch };
-      settingsRef.current = next;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      if (patch.alwaysOnTop !== undefined) cursor.setAlwaysOnTop(next.alwaysOnTop);
-      if (patch.compact !== undefined) {
-        cursor.setWindowSize(next.compact ? 560 : 1180, next.compact ? 640 : 780);
-      }
-      return next;
-    });
+    // Compute the next settings up front and keep side-effects out of the
+    // state updater (StrictMode double-invokes updaters, which would fire
+    // the window RPCs twice per toggle).
+    const next = { ...settingsRef.current, ...patch };
+    settingsRef.current = next;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    if (patch.alwaysOnTop !== undefined) cursor.setAlwaysOnTop(next.alwaysOnTop);
+    if (patch.compact !== undefined) {
+      cursor.setWindowSize(next.compact ? 560 : 1180, next.compact ? 640 : 780);
+    }
+    setSettings(next);
   };
 
   // ── drawing ─────────────────────────────────────────────────────────────
