@@ -274,7 +274,9 @@ export class GestureEngine {
     const rightPinch = pinchMiddleRaw < this.rightPinchIn && indexRaised;
     if (rightPinch) this.rightPinchHeld = true;
     else if (pinchMiddleRaw > this.rightPinchOut) this.rightPinchHeld = false;
-    const rightPinchActive = !pinchActive && this.rightPinchHeld;
+    // The index finger must stay raised for the whole gesture — lowering it
+    // mid-pinch cancels the right-click instead of letting it fire on release.
+    const rightPinchActive = !pinchActive && this.rightPinchHeld && indexRaised;
 
     const indexUp = dist3(P(INDEX_TIP), P(INDEX_PIP)) / palm > TWO_FINGER_MIN && P(INDEX_TIP).y < P(INDEX_PIP).y;
     const middleUp = dist3(P(MIDDLE_TIP), P(MIDDLE_PIP)) / palm > TWO_FINGER_MIN && P(MIDDLE_TIP).y < P(MIDDLE_PIP).y;
