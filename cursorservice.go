@@ -82,7 +82,8 @@ func (c *CursorService) SetAlwaysOnTop(on bool) {
 	}
 }
 
-// SetWindowSize resizes the control window (used by the compact mode toggle).
+// SetWindowSize resizes the control window (used by the compact mode toggle)
+// and re-centers it so the panel stays in the middle of the screen.
 func (c *CursorService) SetWindowSize(width, height int) {
 	app := application.Get()
 	if app == nil {
@@ -90,5 +91,6 @@ func (c *CursorService) SetWindowSize(width, height int) {
 	}
 	if window := app.Window.Current(); window != nil {
 		window.SetSize(width, height)
+		window.Center()
 	}
 }
