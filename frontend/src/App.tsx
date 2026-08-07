@@ -34,12 +34,12 @@ function loadSettings(): Settings {
 }
 
 const MODE_LABEL: Record<CursorMode, { text: string; color: string }> = {
-  move: { text: 'MOVE', color: '#2dd4bf' },
-  click: { text: 'CLICK', color: '#fbbf24' },
-  rightclick: { text: 'RIGHT CLICK', color: '#fb7185' },
-  drag: { text: 'DRAG', color: '#a78bfa' },
-  scroll: { text: 'SCROLL', color: '#38bdf8' },
-  none: { text: '—', color: '#64748b' },
+  move: { text: 'MOVE', color: '#38d3b9' },
+  click: { text: 'CLICK', color: '#e3b35c' },
+  rightclick: { text: 'RIGHT CLICK', color: '#e18498' },
+  drag: { text: 'DRAG', color: '#a292f2' },
+  scroll: { text: 'SCROLL', color: '#5ba9e2' },
+  none: { text: 'READY', color: '#5e6c80' },
 };
 
 type Status = 'idle' | 'loading' | 'running' | 'error';
@@ -377,20 +377,27 @@ export default function App() {
     <div className={`app ${settings.compact ? 'compact' : ''}`}>
       <header className="topbar">
         <div className="brand">
-          <span className="brand-mark">🖐</span>
+          <span className="brand-mark">
+            <BrandMark />
+          </span>
           <div>
             <h1>WaveCursor</h1>
             <p>camera cursor control</p>
           </div>
         </div>
         <div className="topbar-actions">
-          <span className={`status-pill ${status === 'running' ? 'ok' : status === 'error' ? 'bad' : 'busy'}`}>
+          <span
+            role="status"
+            className={`status-pill ${status === 'running' ? 'ok' : status === 'error' ? 'bad' : 'busy'}`}
+          >
             <i />
             {status === 'running' ? 'LIVE' : status === 'error' ? 'ERROR' : 'STARTING'}
           </span>
           <button
             className={`icon-btn ${settings.compact ? 'active' : ''}`}
             title="Compact mode"
+            aria-label="Toggle compact mode"
+            aria-pressed={settings.compact}
             onClick={() => updateSettings({ compact: !settings.compact })}
           >
             ▣
@@ -438,6 +445,8 @@ export default function App() {
               <div className="panel-title">Tracking</div>
               <button
                 className={`master-toggle ${settings.enabled ? 'on' : ''}`}
+                role="switch"
+                aria-checked={settings.enabled}
                 onClick={() => updateSettings({ enabled: !settings.enabled })}
               >
                 <span className="toggle-track">
@@ -455,15 +464,17 @@ export default function App() {
                 <span>Tracking mode</span>
                 <span className="hint">Absolute: finger = cursor · Relative: move to steer</span>
               </div>
-              <div className="segmented">
+              <div className="segmented" role="group" aria-label="Tracking mode">
                 <button
                   className={settings.mode === 'absolute' ? 'active' : ''}
+                  aria-pressed={settings.mode === 'absolute'}
                   onClick={() => updateSettings({ mode: 'absolute' })}
                 >
                   Absolute
                 </button>
                 <button
                   className={settings.mode === 'relative' ? 'active' : ''}
+                  aria-pressed={settings.mode === 'relative'}
                   onClick={() => updateSettings({ mode: 'relative' })}
                 >
                   Relative
@@ -552,6 +563,27 @@ export default function App() {
   );
 }
 
+function BrandMark() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <path
+        d="M10 24c3.4 0 3.4-5.4 6.8-5.4s3.4 5.4 6.8 5.4 3.4-5.4 6.8-5.4 3.4 5.4 6.8 5.4"
+        stroke="url(#wcWave)"
+        strokeWidth="3.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="40.2" cy="24" r="3.6" fill="#ffd08a" />
+      <defs>
+        <linearGradient id="wcWave" x1="10" y1="18.6" x2="37.2" y2="24" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#63e7d0" />
+          <stop offset="1" stopColor="#2aa892" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
+
 function Slider(props: {
   label: string;
   value: number;
@@ -583,7 +615,12 @@ function Slider(props: {
 
 function Toggle(props: { label: string; value: boolean; hint: string; onChange: (v: boolean) => void }) {
   return (
-    <button className="toggle-row" onClick={() => props.onChange(!props.value)}>
+    <button
+      className="toggle-row"
+      role="switch"
+      aria-checked={props.value}
+      onClick={() => props.onChange(!props.value)}
+    >
       <div>
         <div className="toggle-label">{props.label}</div>
         <div className="hint">{props.hint}</div>
