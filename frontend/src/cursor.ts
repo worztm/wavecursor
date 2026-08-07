@@ -26,14 +26,7 @@ export function moveCursor(x: number, y: number): void {
   CursorService.MoveCursor(Math.round(x), Math.round(y)).catch(report);
 }
 
-/** Relative move (drag mode). */
-export function moveCursorRelative(dx: number, dy: number): void {
-  const rx = Math.round(dx);
-  const ry = Math.round(dy);
-  if (rx === 0 && ry === 0) return;
-  CursorService.MoveCursorRelative(rx, ry).catch(report);
-}
-
+/** Left-click at the current cursor position. */
 export function leftClick(): void {
   CursorService.LeftClick().catch(report);
 }
