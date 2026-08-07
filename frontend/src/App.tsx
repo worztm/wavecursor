@@ -85,7 +85,7 @@ export default function App() {
   };
 
   // ── drawing ─────────────────────────────────────────────────────────────
-  const drawFrame = useCallback((landmarks: FrameResult['landmarks'], currentMode: CursorMode, pinchProgress = 0) => {
+  const drawFrame = useCallback((landmarks: FrameResult['landmarks'], pinchProgress = 0) => {
     const canvas = canvasRef.current;
     const video = videoRef.current;
     if (!canvas || !video) return;
@@ -138,27 +138,6 @@ export default function App() {
       }
     }
     ctx.restore();
-
-    // Mode badge (not mirrored).
-    const badge = MODE_LABEL[currentMode];
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.font = '600 13px "Cascadia Code", Consolas, monospace';
-    const label = currentMode === 'none' ? '' : badge.text;
-    if (label) {
-      const pad = 14;
-      const w = ctx.measureText(label).width + pad * 2;
-      const x = 12;
-      const y = H - 40;
-      ctx.fillStyle = 'rgba(10,12,16,0.75)';
-      ctx.beginPath();
-      ctx.roundRect(x, y, w, 30, 8);
-      ctx.fill();
-      ctx.strokeStyle = badge.color;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-      ctx.fillStyle = badge.color;
-      ctx.fillText(label, x + pad, y + 20);
-    }
   }, []);
 
   // ── frame pipeline ───────────────────────────────────────────────────────
@@ -180,7 +159,7 @@ export default function App() {
       if (!s.enabled) {
         if (engine.isDragging) engine.reset();
         const lm = r.landmarks ?? null;
-        drawFrame(lm, 'none', 0);
+        drawFrame(lm, 0);
         setHandDetected(!!lm);
         setMode('none');
         return;
@@ -229,7 +208,7 @@ export default function App() {
         }
       }
 
-      drawFrame(r.landmarks ?? null, out.mode, out.pinchProgress);
+      drawFrame(r.landmarks ?? null, out.pinchProgress);
       setHandDetected(out.detected);
       setMode((prev) => (prev === out.mode ? prev : out.mode));
     },
@@ -411,6 +390,20 @@ export default function App() {
             <video ref={videoRef} className="camera-video" playsInline muted />
             <canvas ref={canvasRef} width={640} height={480} className="camera-canvas" />
             <div key={flashKey} className={`click-flash ${flashKey > 0 ? 'flash' : ''}`} />
+            <div className="viewfinder-hud">
+              <span
+                className={`mode-badge ${!settings.enabled ? 'paused' : ''}`}
+                style={
+                  settings.enabled
+                    ? { color: MODE_LABEL[mode].color, borderColor: `${MODE_LABEL[mode].color}55` }
+                    : undefined
+                }
+              >
+                <i />
+                {settings.enabled ? MODE_LABEL[mode].text : 'PAUSED'}
+              </span>
+              <span className="cam-tag">WAVECURSOR · CAM 01</span>
+            </div>
             {loading && (
               <div className="camera-loading">
                 <div className="spinner" />
