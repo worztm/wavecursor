@@ -23,14 +23,31 @@ const DEFAULTS: Settings = {
 
 const STORAGE_KEY = 'wavecursor.settings';
 
+function clampNum(v: unknown, lo: number, hi: number, fallback: number): number {
+  return typeof v === 'number' && Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : fallback;
+}
+
 function loadSettings(): Settings {
+  const d = DEFAULTS;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return { ...DEFAULTS, ...JSON.parse(raw) };
+    if (!raw) return { ...d };
+    // Validate every field — stale or hand-edited storage must never crash
+    // the gesture engine or leave the UI in a broken state.
+    const p = JSON.parse(raw) as Partial<Settings>;
+    return {
+      enabled: typeof p.enabled === 'boolean' ? p.enabled : d.enabled,
+      mode: p.mode === 'absolute' || p.mode === 'relative' ? p.mode : d.mode,
+      sensitivity: clampNum(p.sensitivity, 1, 10, d.sensitivity),
+      response: clampNum(p.response, 1, 10, d.response),
+      deadZone: clampNum(p.deadZone, 0, 1, d.deadZone),
+      scrollSensitivity: clampNum(p.scrollSensitivity, 1, 10, d.scrollSensitivity),
+      alwaysOnTop: typeof p.alwaysOnTop === 'boolean' ? p.alwaysOnTop : d.alwaysOnTop,
+      compact: typeof p.compact === 'boolean' ? p.compact : d.compact,
+    };
   } catch {
-    /* ignore */
+    return { ...d };
   }
-  return { ...DEFAULTS };
 }
 
 const MODE_LABEL: Record<CursorMode, { text: string; color: string }> = {
@@ -255,6 +272,12 @@ export default function App() {
         const cam = new HandCamera(videoRef.current!);
         cameraRef.current = cam;
         cam.onFrame = handleFrame;
+
+        // Apply the persisted window geometry before the first paint so a
+        // compact-mode session doesn't flash full-size first.
+        if (settingsRef.current.compact) {
+          cursor.setWindowSize(560, 640);
+        }
 
         await cam.start((step) => setStatusMsg(step));
         if (cancelled) {
