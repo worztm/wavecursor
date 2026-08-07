@@ -479,13 +479,18 @@ export default function App() {
             )}
           </div>
           <div className="chips">
-            <div className={`chip ${handDetected ? 'ok' : ''}`}>
-              <span className="dot" /> HAND {handDetected ? 'DETECTED' : 'NOT FOUND'}
+            <div className={`chip ${handDetected && settings.enabled ? 'ok' : ''}`}>
+              <span className="dot" />{' '}
+              {settings.enabled ? (handDetected ? 'HAND DETECTED' : 'HAND NOT FOUND') : 'PAUSED'}
             </div>
             <div className="chip">
-              <span className="dot" style={{ background: MODE_LABEL[mode].color }} /> {MODE_LABEL[mode].text}
+              <span
+                className="dot"
+                style={{ background: settings.enabled ? MODE_LABEL[mode].color : 'var(--text-3)' }}
+              />{' '}
+              {settings.enabled ? MODE_LABEL[mode].text : 'PAUSED'}
             </div>
-            <div className="chip">{fps} FPS</div>
+            <div className="chip">{status === 'running' ? `${fps} FPS` : '-- FPS'}</div>
             <div className="chip">
               {cursorPos.x}, {cursorPos.y}
             </div>
